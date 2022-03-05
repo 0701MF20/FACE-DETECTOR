@@ -1,39 +1,18 @@
 package com.example.android.facedetector;
-
-import android.app.Activity;
 import android.app.Application;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.SparseIntArray;
-import android.view.Surface;
-import android.widget.Toast;
+import com.google.firebase.FirebaseApp;
+//This file does not need but i will used because it is written in instruction to use
+public class LCOFaceDetection extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        FirebaseApp.initializeApp(this);
+    }
+}
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentManager;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.mlkit.vision.common.InputImage;
-import com.google.mlkit.vision.face.Face;
-import com.google.mlkit.vision.face.FaceDetection;
-import com.google.mlkit.vision.face.FaceDetector;
-import com.google.mlkit.vision.face.FaceDetectorOptions;
 
-import java.util.List;
-
-import static android.content.Context.CAMERA_SERVICE;
-import static android.os.Build.VERSION_CODES.M;
-
-public class LCOFaceDetection extends MainActivity {
-    String CAMERA_ID="CAMERALD";
+    /*String CAMERA_ID="CAMERALD";
     InputImage inputImage;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     static {
@@ -43,10 +22,7 @@ public class LCOFaceDetection extends MainActivity {
         ORIENTATIONS.append(Surface.ROTATION_270, 270);
     }
 
-    /**
-     * Get the angle by which an image must be rotated given the device's current
-     * orientation.
-     */
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private int getRotationCompensation(String cameraId, Activity activity, boolean isFrontFacing)
             throws CameraAccessException {
@@ -68,13 +44,9 @@ public class LCOFaceDetection extends MainActivity {
             rotationCompensation = (sensorOrientation - rotationCompensation + 360) % 360;
         }
         return rotationCompensation;
-    }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-faceDetector(imageBitmap);
-    }
-    private void faceDetector(Bitmap bitmap)
+    }*/
+
+  /*  private void faceDetector(Bitmap bitmap)
     {
         FaceDetectorOptions realTimeOpts =
                 new FaceDetectorOptions.Builder().setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
@@ -98,7 +70,17 @@ faceDetector(imageBitmap);
                                     public void onSuccess(List<Face> faces) {
                                         // Task completed successfully
                                         // ...
-
+                                        processButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                Bundle b=new Bundle();
+                                                b.putInt("No",runFaceFeatures(faces));
+                                                DialogFragment dialogFragment=new DialogFragment();
+                                                dialogFragment.setArguments(b);
+                                                dialogFragment.setCancelable(true);
+                                                dialogFragment.show(getSupportFragmentManager(),"Dialog Fragment");
+                                            }
+                                        });
 
                                     }
                                 })
@@ -112,4 +94,36 @@ faceDetector(imageBitmap);
                                                 "Exception", Toast.LENGTH_LONG).show();                                    }
                                 });
     }
-}
+    private int runFaceFeatures(List<Face> faces)
+    {
+        int count=0;
+        Bundle b=new Bundle();
+        float smileProb=0;
+        float rightEyeProb=0;
+        float leftEyeProb=0;
+        for(Face face:faces)
+        {
+            if(face.getSmilingProbability()!=null)
+            {
+                smileProb=face.getSmilingProbability();
+            }
+            if(face.getLeftEyeOpenProbability()!=null)
+            {
+                leftEyeProb=face.getLeftEyeOpenProbability();
+            }
+            if(face.getRightEyeOpenProbability()!=null)
+            {
+                leftEyeProb=face.getRightEyeOpenProbability();
+            }
+//        if(face.getTrackingId()!=null)
+//        {
+//
+//            int id=face.getTrackingId();
+//        }
+            count++;
+        }
+        return count;
+    }*/
+
+
+
