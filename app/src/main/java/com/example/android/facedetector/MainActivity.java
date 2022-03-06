@@ -6,9 +6,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,6 +15,7 @@ import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.View;
@@ -28,6 +26,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceDetection;
@@ -40,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
 Button openCameraButton;
 ImageView imageView;
 static Bitmap imageBitmap;
-Button processButton;
+static int noOfFaces;
+//Button processButton;
     String CAMERA_ID;
 ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
     @Override
@@ -52,7 +52,7 @@ ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new Acti
      //Bitmap photo=(Bitmap)getIntent().getExtras().get(getIntent().toString());
      openCameraButton.setVisibility(View.INVISIBLE);
      imageView.setVisibility(View.VISIBLE);
-     processButton.setVisibility(View.VISIBLE);
+     //processButton.setVisibility(View.VISIBLE);
      imageView.setImageBitmap(imageBitmap);
         faceDetector(imageBitmap);
 
@@ -98,10 +98,11 @@ ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new Acti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseApp.initializeApp(this);
         openCameraButton=findViewById(R.id.OpenCameraButton);
         imageView=findViewById(R.id.imageView);
-        processButton=findViewById(R.id.processImage);
-        processButton.setVisibility(View.INVISIBLE);
+//        processButton=findViewById(R.id.processImage);
+       // processButton.setVisibility(View.INVISIBLE);
         openCameraButton.setOnClickListener(new View.OnClickListener() {
        @Override
        public void onClick(View view) {
@@ -132,6 +133,7 @@ ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new Acti
                         setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL).
                         setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL).
                         setMinFaceSize(0.5f).
+                        enableTracking().
                         build();
         inputImage=InputImage.fromBitmap(bitmap,0);
 
@@ -150,22 +152,39 @@ ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new Acti
                                     public void onSuccess(List<Face> faces) {
                                         // Task completed successfully
                                         // ...
-                                        processButton.setOnClickListener(new View.OnClickListener() {
+//                                        noOfFaces=runFaceFeatures(faces);
+                                         Bundle bundle1=runFaceFeatures(faces);
+
+                                        ResultDialog resultDialog=new ResultDialog();
+                                        resultDialog.setCancelable(false);
+                                        resultDialog.setArguments(bundle1);
+                                        resultDialog.show(getSupportFragmentManager(), "FRAGMENT");
+//                                        if (faces.size() == 0)
+//                                            Toast.makeText(MainActivity.this, "NO FACES", Toast.LENGTH_SHORT).show();
+//                                        else{
+//
+//
+//                                        }
+                                        /*processButton.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
-                                                Toast.makeText(MainActivity.this,"FACES ARE"+runFaceFeatures(faces),Toast.LENGTH_SHORT).show();
-                                                Bundle b=new Bundle();
-                                                b.putInt("No",runFaceFeatures(faces));
+
+                                        //        Toast.makeText(MainActivity.this,"FACES ARE"+runFaceFeatures(faces),Toast.LENGTH_SHORT).show();
+//                                                Bundle b=new Bundle();
+//                                                b.putInt("No",runFaceFeatures(faces));
+//                                                noOfFaces=runFaceFeatures(faces);
 //                                                DialogFragment dialogFragment=new DialogFragment();
 //                                                dialogFragment.setArguments(b);
 //                                                dialogFragment.setCancelable(true);
 //                                                dialogFragment.show(getSupportFragmentManager(),"Dialog Fragment");
+
+//                                                dialogFragment.setCancelable(true);
                                                 DialogFragment dialogFragment=new DialogFragment();
-                                                dialogFragment.setArguments(b);
-                                                dialogFragment.setCancelable(true);
+//                                                dialogFragment.setArguments(b);
                                                 dialogFragment.show(getSupportFragmentManager(),"FragmentManager");
+//                                                Toast.makeText(MainActivity.this,"FACES ARE"+runFaceFeatures(faces),Toast.LENGTH_SHORT).show();
                                             }
-                                        });
+                                        });*/
 
                                     }
                                 })
@@ -179,7 +198,7 @@ ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new Acti
                                                 "Exception", Toast.LENGTH_LONG).show();                                    }
                                 });
     }
-    private int runFaceFeatures(List<Face> faces)
+    private Bundle runFaceFeatures(List<Face> faces)
     {
         float smileProb=0;
         float rightEyeProb=0;
@@ -188,22 +207,37 @@ ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new Acti
         {
             if(face.getSmilingProbability()!=null)
             {
-                smileProb=face.getSmilingProbability();
+                smileProb=smileProb+face.getSmilingProbability();
             }
             if(face.getLeftEyeOpenProbability()!=null)
             {
-                leftEyeProb=face.getLeftEyeOpenProbability();
+                leftEyeProb=leftEyeProb+face.getLeftEyeOpenProbability();
             }
             if(face.getRightEyeOpenProbability()!=null)
             {
-                leftEyeProb=face.getRightEyeOpenProbability();
+                leftEyeProb=rightEyeProb+face.getRightEyeOpenProbability();
             }
 //        if(face.getTrackingId()!=null)
 //        {
 //
 //            int id=face.getTrackingId();
 //        }
+
         }
-        return faces.size();
+
+        Bundle bundle=new Bundle();
+        noOfFaces=faces.size();
+        smileProb=smileProb/noOfFaces;
+        leftEyeProb=leftEyeProb/noOfFaces;
+        rightEyeProb=rightEyeProb/noOfFaces;
+        Log.e("MainActivity smile:   ",smileProb*100+"%");
+        Log.e("MainActivity left   :",leftEyeProb*100+"%");
+        Log.e("MainActivity right   :",rightEyeProb*100+"%");
+
+        bundle.putInt("NoOfFaces",faces.size());
+        bundle.putFloat("SmileProb",smileProb*100);
+        bundle.putFloat("LeftEyeProb",leftEyeProb*100);
+        bundle.putFloat("RightEyeProb",rightEyeProb*100);
+        return bundle;
     }
 }
