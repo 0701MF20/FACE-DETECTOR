@@ -22,13 +22,10 @@ TextView textViewNo;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-     //   return super.onCreateView(inflater, container, savedInstanceState);
      View view=inflater.inflate(R.layout.fragment_resultdialog,container);
         Log.e("Result Dialog","Working");
         textViewNo=view.findViewById(R.id.resulttextView);
         buttonOk=view.findViewById(R.id.okbutton);
-      //  int no=getArguments().getInt("No");
-    //    Log.e("Result Dialog","Working");
 
         int NumberOfFaces=getArguments().getInt("NoOfFaces");
         float smileProbability=getArguments().getFloat("SmileProb");

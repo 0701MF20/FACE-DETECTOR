@@ -101,8 +101,6 @@ ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new Acti
         FirebaseApp.initializeApp(this);
         openCameraButton=findViewById(R.id.OpenCameraButton);
         imageView=findViewById(R.id.imageView);
-//        processButton=findViewById(R.id.processImage);
-       // processButton.setVisibility(View.INVISIBLE);
         openCameraButton.setOnClickListener(new View.OnClickListener() {
        @Override
        public void onClick(View view) {
@@ -137,11 +135,6 @@ ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new Acti
                         build();
         inputImage=InputImage.fromBitmap(bitmap,0);
 
-//        try {
-//            inputImage=InputImage.fromBitmap(bitmap,getRotationCompensation(CAMERA_ID,this,true));
-//        } catch (CameraAccessException e) {
-//            e.printStackTrace();
-//        }
         FaceDetector detector = FaceDetection.getClient(realTimeOpts);
         //Process Image
         Task<List<Face>> result =
@@ -159,33 +152,6 @@ ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new Acti
                                         resultDialog.setCancelable(false);
                                         resultDialog.setArguments(bundle1);
                                         resultDialog.show(getSupportFragmentManager(), "FRAGMENT");
-//                                        if (faces.size() == 0)
-//                                            Toast.makeText(MainActivity.this, "NO FACES", Toast.LENGTH_SHORT).show();
-//                                        else{
-//
-//
-//                                        }
-                                        /*processButton.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-
-                                        //        Toast.makeText(MainActivity.this,"FACES ARE"+runFaceFeatures(faces),Toast.LENGTH_SHORT).show();
-//                                                Bundle b=new Bundle();
-//                                                b.putInt("No",runFaceFeatures(faces));
-//                                                noOfFaces=runFaceFeatures(faces);
-//                                                DialogFragment dialogFragment=new DialogFragment();
-//                                                dialogFragment.setArguments(b);
-//                                                dialogFragment.setCancelable(true);
-//                                                dialogFragment.show(getSupportFragmentManager(),"Dialog Fragment");
-
-//                                                dialogFragment.setCancelable(true);
-                                                DialogFragment dialogFragment=new DialogFragment();
-//                                                dialogFragment.setArguments(b);
-                                                dialogFragment.show(getSupportFragmentManager(),"FragmentManager");
-//                                                Toast.makeText(MainActivity.this,"FACES ARE"+runFaceFeatures(faces),Toast.LENGTH_SHORT).show();
-                                            }
-                                        });*/
-
                                     }
                                 })
                         .addOnFailureListener(
@@ -217,11 +183,7 @@ ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new Acti
             {
                 leftEyeProb=rightEyeProb+face.getRightEyeOpenProbability();
             }
-//        if(face.getTrackingId()!=null)
-//        {
-//
-//            int id=face.getTrackingId();
-//        }
+
 
         }
 
