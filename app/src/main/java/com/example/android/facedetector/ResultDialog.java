@@ -1,5 +1,4 @@
 package com.example.android.facedetector;
-
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import static android.widget.Toast.LENGTH_SHORT;
-
 public class ResultDialog extends DialogFragment {
 Button buttonOk;
 TextView textViewNo;
