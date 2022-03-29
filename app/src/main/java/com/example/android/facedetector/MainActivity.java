@@ -181,7 +181,7 @@ ActivityResultLauncher<Intent> startForResult=registerForActivityResult(new Acti
             }
             if(face.getRightEyeOpenProbability()!=null)
             {
-                leftEyeProb=rightEyeProb+face.getRightEyeOpenProbability();
+                rightEyeProb=rightEyeProb+face.getRightEyeOpenProbability();
             }
 
 
